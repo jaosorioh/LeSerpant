@@ -4,8 +4,8 @@ En este repositorio encontrará todos los archivos correspondientes al desarroll
 
 --- 
 
-- **/include** contiene todos los archivos *.h* con los prototipos de las clases usadas
-- **/src** contiene todos los archivos *.cpp* que implementan los métodos y atributos de cada clase
+- **include/** contiene todos los archivos *.h* con los prototipos de las clases usadas
+- **src/** contiene todos los archivos *.cpp* que implementan los métodos y atributos de cada clase
 - **Main.cpp** ejecuta el juego Le Serpent
 
 Cualquier inquietud o información adicional, puede comunicarse con cualquiera de los contribuidores de este repositorio.
