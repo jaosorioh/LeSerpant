@@ -46,17 +46,18 @@ void Juego::jugar()
             if (aux_ch == ERR || aux_ch == ch) {
                 gameFinished = update(ch);
             }
-            else if (ch != aux_ch) {
-                if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
-                    ch = aux_ch;
-                }
-                else if (aux_ch == 27) {
-                    gameFinished = true;
-                }
-                else {
-                    gameFinished = false;
-                }
+            else if (aux_ch == 27) {
+                gameFinished = true;
             }
+            else if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
+                ch = aux_ch;
+                gameFinished = update(ch);
+            }
+
+            else {
+                gameFinished = false;
+            }
+
             if (gameFinished) {
                 clear();
                 t->printGameOver();
