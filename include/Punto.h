@@ -4,11 +4,8 @@
 class Punto {
 
 public:
-    Punto(int, int, char*);
+    Punto(int, int);
     //~Punto();
-
-    void setC(char* c_);
-    char* getC() const;
     void setXY(int, int);
     void setX(int);
     void setY(int);
@@ -19,7 +16,6 @@ public:
 private:
     int x;
     int y;
-    char* c;
 };
 
 #endif

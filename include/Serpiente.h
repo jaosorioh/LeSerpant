@@ -1,43 +1,35 @@
 //Implementación de la serpiente
-
 #ifndef SERPIENTE_H
 #define SERPIENTE_H
-#include "Tablero.h"
+
 #include "Punto.h"
-#include <string>
 #include <vector>
-#include <curses.h>
+#include <ncurses.h>
 
 using namespace std;
 
 class Serpiente {
 public:
-	Serpiente( int, double );
-	Serpiente();
+    Serpiente(const int&, const int&, int = 3, double = 1.0);//v = pix/sec
+    //Para mover todo el cuerpo según la nueva posición de la cabeza:
+    void moverse(bool, int&);
 
-	//Para actualizar la posición de todo el cuerpo según la posición de la cabeza:
-	void Posicion(bool);
+    //Set y get la velocidad de la serpiente
+    void setV(double);
+    double getV() const;
 
-	//Set y get la longitud de la serpiente
-	void setL( int );
-	int getL() const;
+    void setD(int);
+    int getD() const;
+    Punto moverCabeza(int);
+    void setCuerpo(vector<Punto> *);
+    vector<Punto> *getCuerpo();
 
-	//Set y get la velocidad de la serpiente
-	void setV( double );
-	double getV() const;
-	
-    
 private:
-	vector<Punto> cuerpo;	//Inicialmente tiene 4 puntos
-	int L;		//Longitud
-	double V;	//Velocidad
-	int direccion;	//Dirección hacia donde va: 0,1,2,3 = arriba, abajo, izquierda, derecha
-
-	void flechas();
-	
-	Punto moverse();
-
-
+    vector<Punto> *cuerpo = new vector<Punto>;
+    double V; //Velocidad
+    int D; //Dirección hacia donde va, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
+    Punto moverCabeza(); //genera una nueva posicion para la cabeza
+    
 };
 
 #endif

@@ -1,57 +1,92 @@
 //Clase Serpiente
-
 #include "../include/Serpiente.h"
-
 using namespace std;
 
 //Initial conditions:
-Serpiente::Serpiente(int L_ = 3, double V_ = 0.01){
+Serpiente::Serpiente(const int& N, const int& M, int L, double V_)
+{
     setV(V_);
+    int n = static_cast<int>(N / 2.0);//verificar
+    int m = static_cast<int>(M / 2.0);
+    if (n + L > N) {
+        L = 3;
+    }
+
+    for (int i = 0; i < L; i++) {
+        Punto p(m, n + i);
+        cuerpo->push_back(p);
+    }
 }
 
-Serpiente::Serpiente(){
-    int L_;
-    double V_;
-    
-    setV(V_);
-}
-
-
-
-void Serpiente::setV(double V_) {
+void Serpiente::setV(double V_)
+{
     V = V_;
 }
 
-double Serpiente::getV() const {
+double Serpiente::getV() const
+{
     return V;
 }
 
-void Serpiente::Posicion(bool P){
-	Punto NewPos = Serpiente::moverse();
-	cuerpo.insert(cuerpo.begin(), NewPos);
-	if(P == false){			//Para cuando coma.
-		cuerpo.pop_back();}
+void Serpiente::setD(int D_)
+{
+    D = D_;
 }
 
-void Serpiente::flechas(){
-	int tecla = getch();
-     if(tecla!=ERR){
-            switch(tecla){
-               case KEY_UP:    if(direccion != 1) direccion = 0; break;
-               case KEY_DOWN:     if(direccion != 0) direccion = 1; break;
-               case KEY_LEFT: if(direccion != 3) direccion = 2; break;
-               case KEY_RIGHT:   if(direccion != 2) direccion = 3; break;
-            		}
-     		}
+int Serpiente::getD() const
+{
+    return D;
 }
 
-Punto Serpiente::moverse(){
-	int x = cuerpo[0].getX();
-	int y = cuerpo[0].getY();
-	if(direccion == 0){ y--;}	//Arriba
-	else if(direccion == 1){y++;}	//Abajo
-	else if(direccion == 2){x--;}	//Izquierda
-	else if(direccion == 3){x++;}	//Derecha
-	Punto P(x, y);
-	return P;
+void Serpiente::setCuerpo(vector<Punto> *cuerpo_)
+{
+    cuerpo = cuerpo_;
+}
+
+vector<Punto> *Serpiente::getCuerpo()
+{
+    return cuerpo;
+}
+
+Punto Serpiente::moverCabeza(int D_)
+{
+    //int tecla = getch();
+    //if(tecla!=ERR){
+
+    int x = cuerpo->at(0).getX();
+    int y = cuerpo->at(0).getY();
+
+    if (D_ == KEY_LEFT) {
+        x-=2;
+    }
+
+    if (D_ == KEY_RIGHT) {
+        x+=2;
+    }
+
+    if (D_ == KEY_DOWN) {
+        y++;
+    }
+
+    if (D_ == KEY_UP) {
+        y--;
+    }
+
+    Punto P(x, y);
+    return P;
+}
+
+Punto Serpiente::moverCabeza()
+{
+    return moverCabeza(D);
+}
+
+void Serpiente::moverse(bool P, int& ch)
+{
+    D = ch;
+    Punto cabeza = moverCabeza();
+    cuerpo->insert(cuerpo->begin(), cabeza);
+    if (!P) { //Para cuando coma.
+        cuerpo->pop_back();
+    }
 }
