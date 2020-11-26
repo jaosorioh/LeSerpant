@@ -6,37 +6,34 @@
 #include <string>
 #include <time.h>
 
+
+#define N 20
+#define M 40
+
 using namespace std;
 class Tablero {
 
 public:
-    Tablero(int &, int &);
+    Tablero();
+    ~Tablero();
+    Serpiente * getSnake() const;
 
-    void setN(int &);
-    int getN() const;
-    
-    void setM(int &);    
-    int getM() const;
-/*
-    void setPuntos(vector<Punto> *);
-    
-    vector<Punto> *getPuntos() const;
-*/
+    void setSnake(Serpiente *);
+
+    vector<Punto> *getPresas() const;
+
+    void setPresas(vector<Punto> *);
     int getPuntoIndex(const int, const int, vector<Punto> *);
-    
     void randomXY(int &);
-    bool update(int &);
     
-    void printGrid(WINDOW *);
-    void printGameOver(WINDOW *);
+    void printGrid();
+    void printGameOver();
 
 private:
-    int N;
-    int M;
-    void printBorder(WINDOW *);
+    void printBorder();
     vector<Punto> *presas;
     Serpiente *snake;
-    
+    WINDOW *win;
 };
 
 #endif

@@ -10,7 +10,7 @@ using namespace std;
 
 class Serpiente {
 public:
-    Serpiente(const int&, const int&, int = 3, double = 1.0);//v = pix/sec
+    Serpiente(const int&, const int&, int = 3, double = 15.0);//v = pix/sec
     //Para mover todo el cuerpo según la nueva posición de la cabeza:
     void moverse(bool, int&);
 

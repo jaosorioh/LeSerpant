@@ -1,48 +1,45 @@
 #include "../include/Tablero.h"
 #include <unistd.h>
+
 using namespace std;
 
-Tablero::Tablero(int& N_, int& M_)
+Tablero::Tablero()
 {
-    N = N_;
-    M = M_;
-    snake = new Serpiente(N, M, 3, 15.0);
+    snake = new Serpiente(N, M);
     presas = new vector<Punto>;
-    int r = 1;
-    randomXY(r);
+    win = newwin(N+2, M+4, 3, 3);
+    wbkgd(win, COLOR_PAIR(1));    
+    wrefresh(win);
 }
 
-void Tablero::setN(int& N_)
+Tablero::~Tablero()
 {
-    N = N_;
+    delete snake;
+    delete presas;
+    delete win;
 }
 
-int Tablero::getN() const
+Serpiente * Tablero::getSnake() const
 {
-    return N;
+    return snake;
 }
 
-void Tablero::setM(int & M_)
+void Tablero::setSnake(Serpiente *s)
 {
-    M = M_;
+    snake = s;
 }
 
-int Tablero::getM() const
+vector<Punto> * Tablero::getPresas() const
 {
-    return M;
-}
-/*
-void Tablero::setPuntos(vector<Punto>* puntos_)
-{
-    puntos = puntos_;
+    return presas;
 }
 
-vector<Punto>* Tablero::getPuntos() const
+void Tablero::setPresas(vector<Punto> * presas_)
 {
-    return puntos;
-}*/
+    presas = presas_;
+}
 
-int Tablero::getPuntoIndex(const int f, const int c, vector<Punto> *puntos)
+int Tablero::getPuntoIndex(const int f, const int c, vector<Punto>* puntos)
 {
     int i = 0;
 
@@ -50,7 +47,7 @@ int Tablero::getPuntoIndex(const int f, const int c, vector<Punto> *puntos)
         i = -1;
     else {
         for (; i < puntos->size(); i++) {
-            Punto *p = &(puntos->at(i));
+            Punto* p = &(puntos->at(i));
 
             if ((p->getX() == f) && (p->getY() == c)) {
                 break;
@@ -68,11 +65,11 @@ void Tablero::randomXY(int& npuntos)
     int i = 0;
 
     while (i < npuntos) {
-        int m = static_cast<int>((M-2) / 2.0);
+        int m = static_cast<int>((M - 2) / 2.0);
         int y = rand() % N + 1;
-        int x = 2*(rand() % m + 1);
-        
-        if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo())== -1) {
+        int x = 2 * (rand() % m + 1);
+
+        if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1) {
             Punto p(x, y);
             presas->push_back(p);
             i++;
@@ -80,116 +77,70 @@ void Tablero::randomXY(int& npuntos)
     }
 }
 
-bool Tablero::update(int& ch)
+void Tablero::printGameOver()
 {
-    bool gameFinished = false;
-    Punto newCabeza = snake->moverCabeza(ch);
-    int index = getPuntoIndex(newCabeza.getX(), newCabeza.getY(), presas);
-    if(index>-1)
+    while(snake->getCuerpo()->size()>0)
     {
-        presas->erase(presas->begin() + index);
-        int np = 1;
-        randomXY(np);        
-        snake->moverse(true, ch);
+        snake->getCuerpo()->pop_back();
+        usleep(1e4);
+        printGrid();
     }
-    else
-    {
-        int index = getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
-        if(index == -1)
-        {
-            snake->moverse(false, ch);
-        }
-        else
-        {
-            gameFinished = true;
-        }
-        
-    }    
-    
-    if(!gameFinished)
-    {
-        Punto *cabeza = &snake->getCuerpo()->at(0);
-
-        if(cabeza->getX()<2)
-        {
-            cabeza->setX(M-2);
-        }
-        else if(cabeza->getX()>M-2)
-        {
-            cabeza->setX(2);
-        }
-        else if(cabeza->getY()<1)
-        {
-            cabeza->setY(N);
-        }
-        else if(cabeza->getY()>N)
-        {
-            cabeza->setY(1);
-        }
-        
-    }
-    return gameFinished;
-    
-}
-
-void Tablero::printGameOver(WINDOW * win)
-{
-    werase(win);
-    printBorder(win);
+    wclear(win);
+    printBorder();
     int n = static_cast<int>(N / 2.0);
     wattron(win, COLOR_PAIR(1));
-    string fullstring = "G A M E  O V E R";
-    vector<string> toprint = {"G ","A ", "M ", "E  ", "O ","V ","E ","R"};
+    string toprint = "G A M E  O V E R";
+
+    int m = static_cast<int>(((M + 2) - toprint.length()) / 2.0);
     
-    int m = static_cast<int>(((M+2)-fullstring.length()) / 2.0);
-    for(int i = 0; i<toprint.size(); i++)
-    {
-        mvwprintw(win, n, m+i*2, toprint[i].c_str() );
+    for (char&c : toprint) {
+        mvwaddch(win, n, m, chtype(c));
         wrefresh(win);
-        usleep(0.25e6);
+        m++;
+        usleep(1e5);
     }
-    usleep(1e6);    
-    
+    usleep(1e6);
+    wclear(win);
 }
 
-void Tablero::printBorder(WINDOW * win)
+void Tablero::printBorder()
 {
-    wattron(win, COLOR_PAIR(3));
-    for (int i = 0; i < N + 1; i++) {     
-        mvwaddch(win, i, 0, ' ');
-        mvwaddch(win, i, 1, ' '); 
-        mvwaddch(win, i, M, ' ');
-        mvwaddch(win, i, M + 1, ' ');   
-    }
-    
-    for (int i = 0; i < M + 2; i++) {     
-        mvwaddch(win, 0, i, ' ');
-        mvwaddch(win, N+1, i, ' ');   
-    }
-}
-
-void Tablero::printGrid(WINDOW * win)
-{
-    printBorder(win);
     wattron(win, COLOR_PAIR(2));
-    
+    for (int i = 0; i < N + 1; i++) {
+        mvwaddch(win, i, 0, ' ');
+        mvwaddch(win, i, 1, ' ');
+        mvwaddch(win, i, M, ' ');
+        mvwaddch(win, i, M + 1, ' ');
+    }
+
+    for (int i = 0; i < M + 2; i++) {
+        mvwaddch(win, 0, i, ' ');
+        mvwaddch(win, N + 1, i, ' ');
+    }
+}
+
+void Tablero::printGrid()
+{
+    printBorder();
+    wattron(win, COLOR_PAIR(3));
+
     vector<Punto>* cuerpo_ = snake->getCuerpo();
     for (int i = 0; i < cuerpo_->size(); i++) {
-        Punto* pa = &cuerpo_->at(i);        
+        Punto* pa = &cuerpo_->at(i);
         mvwaddch(win, pa->getY(), pa->getX(), ' ');
-        mvwaddch(win, pa->getY(), pa->getX()+1, ' ');         
+        mvwaddch(win, pa->getY(), pa->getX() + 1, ' ');
     }
-    
-    wattron(win, COLOR_PAIR(4));
-    
-    for (int i = 0; i < presas->size(); i++) {
-        Punto* pa = &presas->at(i);        
-        mvwaddch(win, pa->getY(), pa->getX(), ' ');
-        mvwaddch(win, pa->getY(), pa->getX()+1, ' ');         
-    }
-    
     wrefresh(win);
-    double dt = 1e6*1/snake->getV();
+    wattron(win, COLOR_PAIR(4));
+
+    for (int i = 0; i < presas->size(); i++) {
+        Punto* pa = &presas->at(i);
+        mvwaddch(win, pa->getY(), pa->getX(), ' ');
+        mvwaddch(win, pa->getY(), pa->getX() + 1, ' ');
+    }
+
+    wrefresh(win);
+    double dt = 1e6 * 1 / snake->getV();
     usleep(dt);
     werase(win);
 }
