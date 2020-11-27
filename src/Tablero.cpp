@@ -131,7 +131,7 @@ void Tablero::printGrid()
         mvwaddch(win, pa->getY(), pa->getX(), ' ');
         mvwaddch(win, pa->getY(), pa->getX() + 1, ' ');
     }
-    wrefresh(win);
+    
     wattron(win, COLOR_PAIR(4));
 
     for (int i = 0; i < presas->size(); i++) {

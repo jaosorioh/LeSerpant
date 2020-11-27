@@ -20,12 +20,25 @@ Serpiente::Serpiente(int L, double V_)
 
 void Serpiente::setV(double V_)
 {
+    if(V_ < Vmin)
+    {
+        V_ = Vmin;
+    }
+    else if(V_ > Vmax)   
+    {
+        V_ = Vmax;
+    }
     V = V_;
 }
 
 double Serpiente::getV() const
 {
     return V;
+}
+
+void Serpiente::modVel()
+{
+    setV(getV()+aum);
 }
 
 void Serpiente::setD(int D_)
@@ -97,6 +110,7 @@ Punto Serpiente::moverCabeza()
 void Serpiente::comer(Punto &p)
 {
     cuerpo->insert(cuerpo->begin(), p);
+    modVel();
 }
 
 void Serpiente::moverse(int& ch)
