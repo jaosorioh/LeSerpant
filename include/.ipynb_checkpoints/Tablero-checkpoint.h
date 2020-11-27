@@ -6,6 +6,10 @@
 #include <string>
 #include <time.h>
 
+
+#define N 20
+#define M 40
+
 using namespace std;
 class Tablero {
 

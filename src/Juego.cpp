@@ -5,6 +5,7 @@ using namespace std;
 
 Juego::Juego()
 {
+    
     srand(time(NULL));
 
     initscr();
@@ -43,24 +44,39 @@ void Juego::jugar()
             t->printGrid();
 
             int aux_ch = getch();
-            if (aux_ch == ERR || aux_ch == ch) {
+            clrtoeol();
+            if (aux_ch == ERR) {
                 gameFinished = update(ch);
             }
-            else if (aux_ch == 27) {
-                gameFinished = true;
+            else if(aux_ch!=ERR){
+                if(aux_ch == 27)
+                {
+                    erase();
+                    endwin();
+                    exit(0);
+                }
+                else if(aux_ch == ch)
+                {
+                    gameFinished = update(ch);
+                }
+                else if(aux_ch == KEY_UP || aux_ch == KEY_DOWN || aux_ch == KEY_LEFT || aux_ch == KEY_RIGHT)
+                {
+                    if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
+                    ch = aux_ch;
+                    gameFinished = update(ch);
+                    }
+                }
+                else
+                {
+                    gameFinished = update(ch);
+                }
+                    
             }
-            else if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
-                ch = aux_ch;
-                gameFinished = update(ch);
-            }
-
-            else {
-                gameFinished = false;
-            }
-
             if (gameFinished) {
+                usleep(0.6e4);
                 clear();
                 t->printGameOver();
+                usleep(1e6);
                 break;
             }
         }
@@ -76,7 +92,7 @@ void Juego::mainMenu()
             attron(COLOR_PAIR(snake_pxart[i][j] + 1));
             mvprintw(i + 1, 2 * j + 5, " ");
             mvprintw(i + 1, 2 * j + 6, " ");
-            usleep(0.7e4);
+            usleep(0.6e4);
             refresh();
         }
     }
@@ -90,7 +106,7 @@ void Juego::mainMenu()
         for (char& c : str) {
             mvaddch(i + k, x, chtype(c));
             refresh();
-            usleep(0.6e5);
+            usleep(1.2e4);
             x++;
         }
         if (k < 2 || k > 3)
@@ -115,40 +131,26 @@ bool Juego::update(int& ch)
     bool gameFinished = false;
     Serpiente* snake = t->getSnake();
     vector<Punto>* presas = t->getPresas();
+    
     Punto newCabeza = snake->moverCabeza(ch);
+    
     int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), presas);
     if (index > -1) {
         presas->erase(presas->begin() + index);
         beep();
+        snake->comer(newCabeza);
         int np = 1;
         t->randomXY(np);
-        snake->moverse(true, ch);
+        
     }
     else {
         int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
-        if (index == -1) {
-            snake->moverse(false, ch);
+        if (index == -1 || (index == snake->getCuerpo()->size()-1 && snake->getCuerpo()->size() <= N)) {
+            snake->moverse(ch);
         }
         else {
             gameFinished = true;
         }
-    }
-
-    if (!gameFinished) {
-        Punto* cabeza = &snake->getCuerpo()->at(0);
-
-        if (cabeza->getX() < 2) {
-            cabeza->setX(M - 2);
-        }
-        else if (cabeza->getX() > M - 2) {
-            cabeza->setX(2);
-        }
-        else if (cabeza->getY() < 1) {
-            cabeza->setY(N);
-        }
-        else if (cabeza->getY() > N) {
-            cabeza->setY(1);
-        }
-    }
+    }        
     return gameFinished;
 }

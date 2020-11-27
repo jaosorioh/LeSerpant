@@ -6,17 +6,14 @@
 #include <vector>
 #include <ncurses.h>
 
-#define N 20
-#define M 40
-
 using namespace std;
 
 class Serpiente {
 public:
-    Serpiente(int = 3, double = 10.0);//v = pix/sec
+    Serpiente(const int&, const int&, int = 3, double = 15.0);//v = pix/sec
     //Para mover todo el cuerpo según la nueva posición de la cabeza:
-    void moverse(int&);
-    void comer(Punto &);
+    void moverse(bool, int&);
+
     //Set y get la velocidad de la serpiente
     void setV(double);
     double getV() const;

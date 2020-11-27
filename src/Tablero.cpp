@@ -5,11 +5,11 @@ using namespace std;
 
 Tablero::Tablero()
 {
-    snake = new Serpiente(N, M);
+    snake = new Serpiente();
     presas = new vector<Punto>;
-    win = newwin(N+2, M+4, 3, 3);
+    win = newwin(N + 2, M + 4, 3, 3);
     wbkgd(win, COLOR_PAIR(1));    
-    wrefresh(win);
+        wrefresh(win);
 }
 
 Tablero::~Tablero()
@@ -65,8 +65,8 @@ void Tablero::randomXY(int& npuntos)
     int i = 0;
 
     while (i < npuntos) {
-        int m = static_cast<int>((M - 2) / 2.0);
-        int y = rand() % N + 1;
+        int m = static_cast<int>((M + 1) / 2.0);
+        int y = rand() % (N) + 1;
         int x = 2 * (rand() % m + 1);
 
         if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1) {
@@ -82,7 +82,7 @@ void Tablero::printGameOver()
     while(snake->getCuerpo()->size()>0)
     {
         snake->getCuerpo()->pop_back();
-        usleep(1e4);
+        usleep(0.5e4);
         printGrid();
     }
     wclear(win);
@@ -97,26 +97,27 @@ void Tablero::printGameOver()
         mvwaddch(win, n, m, chtype(c));
         wrefresh(win);
         m++;
-        usleep(1e5);
+        usleep(0.5e5);
     }
-    usleep(1e6);
+    
     wclear(win);
 }
 
 void Tablero::printBorder()
 {
     wattron(win, COLOR_PAIR(2));
-    for (int i = 0; i < N + 1; i++) {
-        mvwaddch(win, i, 0, ' ');
-        mvwaddch(win, i, 1, ' ');
-        mvwaddch(win, i, M, ' ');
-        mvwaddch(win, i, M + 1, ' ');
-    }
-
-    for (int i = 0; i < M + 2; i++) {
+    for (int i = 0; i < M + 4; i++) {
         mvwaddch(win, 0, i, ' ');
         mvwaddch(win, N + 1, i, ' ');
     }
+    
+    for (int i = 1; i < N + 1; i++) {
+        mvwaddch(win, i, 0, ' ');
+        mvwaddch(win, i, 1, ' ');
+        mvwaddch(win, i, M + 2, ' ');
+        mvwaddch(win, i, M + 3, ' ');
+    }
+    
 }
 
 void Tablero::printGrid()
