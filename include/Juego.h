@@ -1,10 +1,14 @@
+
 #ifndef JUEGO_H
 #define JUEGO_H
 
 #include "Tablero.h"
+#include "Jugador.h"
 
 using namespace std;
-class Juego {
+
+class Juego 
+{
 
 public:
     Juego();
@@ -13,7 +17,7 @@ public:
 private:
     bool update(int &);
     void mainMenu();
-   // Jugador jugador;
+    Jugador player; 
     /*vector<Nivel> niveles;
     int nivel_actual;*/
     Tablero *t;
