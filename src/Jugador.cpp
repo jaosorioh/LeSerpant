@@ -12,13 +12,15 @@ Implementación de la clase Jugador
 
 using namespace std;
 
-Jugador::Jugador( string uName )
+Jugador::Jugador()
 {
 	//set nombre en mayuscula
+	string uName = "brayanpapi";
 
 	transform(uName.begin(), uName.end(), uName.begin(), ::toupper);
 	
 	setName(uName);
+	setCurrScore(0);
 
 	//obtener la información de puntajes máximos
 	getFileInfo();
@@ -79,7 +81,7 @@ void Jugador::getFileInfo( void )
 
 	puntajes_entr.close();
 
-	cout << "probando indice: " << nameIndex << " " << allPlayers.at(nameIndex) << endl;
+	//cout << "probando indice: " << nameIndex << " " << allPlayers.at(nameIndex) << endl;
 
 }
 
@@ -100,6 +102,9 @@ void Jugador::setNewFile( void )
 	}
 
 	sort(sortScore.begin(), sortScore.end(), greater<int>());
+
+	//quitamos los repetidos
+	sortScore.erase( unique( sortScore.begin(), sortScore.end()), sortScore.end() );
 
 	//abrimos archivo para escritura
 	ofstream puntajes_out(scoreFile.c_str());
@@ -125,6 +130,26 @@ void Jugador::setNewFile( void )
 
 	puntajes_out.close();
 
+}
+
+/*
+función que agrega puntos 
+INPUT: int
+*/
+void Jugador::addCurrScore( int tosum)
+{
+	currScore += tosum;
+}
+
+/*
+función que actualiza el puntaje máximo al final del juego
+*/
+void Jugador::checkMaxScore( void )
+{
+	if (currScore > maxScore)
+	{
+		maxScore = currScore;
+	}
 }
 
 /*

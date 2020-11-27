@@ -38,11 +38,16 @@ void Juego::jugar()
         int np = 1;
         t->randomXY(np);
         int ch = KEY_UP;
-        string user = "Jugador: brayanpapi";
+        string user = "Jugador: " + player.getName();
         mvprintw(1, 3, user.c_str());
-        string score = "Puntaje: 200";
-        mvprintw(1, (M + 4) - score.length(), score.c_str());
-        while (true) {
+        //string score = "Puntaje: 200";
+        //mvprintw(1, (M + 4) - score.length(), score.c_str());
+        while (true) 
+        {
+            //imprime el puntaje y se actualiza
+            string score = "Puntaje: " + to_string(player.getCurrScore());
+            mvprintw(1, (M + 4) - score.length(), score.c_str());
+
             t->printGrid();
             
             int aux_ch = getch();
@@ -74,11 +79,18 @@ void Juego::jugar()
                 }
                     
             }
-            if (gameFinished) {
+            //lo que hace una vez pierde
+            if (gameFinished) 
+            {
                 usleep(0.6e4);
                 clear();
                 t->printGameOver();
                 usleep(1e6);
+
+                player.checkMaxScore();
+                player.setNewFile();
+                player.setCurrScore(0);
+
                 break;
             }
         }
@@ -145,6 +157,7 @@ bool Juego::update(int& ch)
     if (index > -1) {
         presas->erase(presas->begin() + index);
         beep();
+        player.addCurrScore(10); //suma puntos por comer
         snake->comer(newCabeza);
         int np = 1;
         t->randomXY(np);

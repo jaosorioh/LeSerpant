@@ -9,10 +9,13 @@ using namespace std;
 
 class Jugador {
 public:
-    Jugador(string);
+    Jugador();
     //~Jugador();
 
     void setNewFile( void );
+    void addCurrScore( int );
+
+    void checkMaxScore( void );
 
     void setMaxScore( int );
     int getMaxScore( void ) const;
