@@ -22,32 +22,41 @@ Juego::Juego()
     init_pair(3, COLOR_BLACK, COLOR_GREEN);
     init_pair(4, COLOR_BLACK, COLOR_RED);
     init_pair(5, COLOR_WHITE, COLOR_BLACK);
+    wbkgd(stdscr, COLOR_PAIR(1));
+    
 }
 
 void Juego::jugar()
 {
     bool gameFinished = false;
+    string uname = "";
     while (true) {
-        wbkgd(stdscr, COLOR_PAIR(1));
         refresh();
         mainMenu();
         clear();
         erase();
         refresh();
         t = new Tablero();
-        int np = 1;
+        if(uname == "")
+        {
+            string message = "Ingrese su nick:";
+            uname = t->readLine(message);
+            player = new Jugador(uname);
+            usleep(1e6);
+        }
+        
+        int np = 1;   
+    
         t->randomXY(np);
         int ch = KEY_UP;
-        string user = "Jugador: " + player.getName();
+        string user = "Jugador: " + player->getName();
         mvprintw(1, 3, user.c_str());
-        //string score = "Puntaje: 200";
-        //mvprintw(1, (M + 4) - score.length(), score.c_str());
         while (true) 
         {
             //imprime el puntaje y se actualiza
-            string score = "Puntaje: " + to_string(player.getCurrScore());
+            string score = "Puntaje: " + to_string(player->getCurrScore());
             mvprintw(1, (M + 4) - score.length(), score.c_str());
-
+            
             t->printGrid();
             
             int aux_ch = getch();
@@ -87,9 +96,9 @@ void Juego::jugar()
                 t->printGameOver();
                 usleep(1e6);
 
-                player.checkMaxScore();
-                player.setNewFile();
-                player.setCurrScore(0);
+                player->checkMaxScore();
+                player->setNewFile();
+                player->setCurrScore(0);
 
                 break;
             }
@@ -157,7 +166,7 @@ bool Juego::update(int& ch)
     if (index > -1) {
         presas->erase(presas->begin() + index);
         beep();
-        player.addCurrScore(10); //suma puntos por comer
+        player->addCurrScore(10); //suma puntos por comer
         snake->comer(newCabeza);
         int np = 1;
         t->randomXY(np);

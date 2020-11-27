@@ -24,6 +24,9 @@ public:
     
     void printGrid();
     void printGameOver();
+    string readLine(string &);
+    string readLine(int, int);
+    void printMessage(string &);
 
 private:
     void printBorder();

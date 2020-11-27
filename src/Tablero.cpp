@@ -9,7 +9,7 @@ Tablero::Tablero()
     presas = new vector<Punto>;
     win = newwin(N + 2, M + 4, 3, 3);
     wbkgd(win, COLOR_PAIR(1));    
-        wrefresh(win);
+    wrefresh(win);
 }
 
 Tablero::~Tablero()
@@ -85,22 +85,86 @@ void Tablero::printGameOver()
         usleep(0.5e4);
         printGrid();
     }
-    wclear(win);
     printBorder();
-    int n = static_cast<int>(N / 2.0);
-    wattron(win, COLOR_PAIR(1));
-    string toprint = "G A M E  O V E R";
+    string gover = "G A M E  O V E R";
+    printMessage(gover);
+    wrefresh(win);
+    wclear(win);
+   
+}
 
-    int m = static_cast<int>(((M + 2) - toprint.length()) / 2.0);
+void Tablero::printMessage(string & message)
+{
+    printBorder();
+    wrefresh(win);
+    wattron(win, COLOR_PAIR(1));
     
-    for (char&c : toprint) {
-        mvwaddch(win, n, m, chtype(c));
+    int x = static_cast<int>(((M + 4) - message.length()) / 2.0);
+    for (char& c : message) {
+        mvwaddch(win, (N+2)/2, x, chtype(c));
+        usleep(5e4);
+        x++;
         wrefresh(win);
-        m++;
-        usleep(0.5e5);
     }
     
+}
+
+string Tablero::readLine(string & message)
+{
+    printMessage(message);
+    int x = static_cast<int>(((M + 4) - message.length()) / 2.0);
+    int y = (N+2)/2;
+    string line = readLine(y+1, (M+4)/2-8);
     wclear(win);
+    return line;
+}
+string Tablero::readLine(int y, int x)
+{
+    string input;
+    wattron(win, COLOR_PAIR(1));
+    
+    // let the terminal do the line editing
+
+    // this reads from buffer after <ENTER>, not "raw" 
+    // so any backspacing etc. has already been taken care of
+    int ch = getch();
+    int i = 0;
+    while ( true)
+    {
+        ch = getch();
+    
+        if(ch!=ERR )
+        {
+            if(ch=='\n' )
+            {
+                break;
+            }
+            else if (isalnum(ch)) {
+                if(input.length()>8)
+                {
+                    break;
+                }
+                
+                input.push_back( ch );
+                
+                mvwaddch(win, y, x, ch);
+                wrefresh(win);
+                x++;
+            }
+        } 
+        
+    }
+    wclear(win);
+    // restore your cbreak / echo settings here
+    return input;
+    /*
+    printBorder();
+    char str[10];
+    wgetstr(win, str);
+    usleep(1e5);
+    mvprintw(2, 0, "You Entered: %s", str);
+    return "";*/
+    
 }
 
 void Tablero::printBorder()

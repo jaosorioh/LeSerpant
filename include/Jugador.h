@@ -9,7 +9,7 @@ using namespace std;
 
 class Jugador {
 public:
-    Jugador();
+    Jugador(string &);
     //~Jugador();
 
     void setNewFile( void );

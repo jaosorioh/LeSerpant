@@ -12,16 +12,12 @@ Implementación de la clase Jugador
 
 using namespace std;
 
-Jugador::Jugador()
+Jugador::Jugador(string & name)
 {
 	//set nombre en mayuscula
-	string uName = "brayanpapi";
-
-	transform(uName.begin(), uName.end(), uName.begin(), ::toupper);
-	
-	setName(uName);
+	//string uName = "alexito"	
+	setName(name);
 	setCurrScore(0);
-
 	//obtener la información de puntajes máximos
 	getFileInfo();
 }
@@ -194,6 +190,7 @@ INPUT: string (nombre del jugador)
 */
 void Jugador::setName( string name)
 {
+    transform(name.begin(), name.end(), name.begin(), ::toupper);
 	playerName = name;
 }
 

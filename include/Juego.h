@@ -17,7 +17,7 @@ public:
 private:
     bool update(int &);
     void mainMenu();
-    Jugador player; 
+    Jugador *player;
     /*vector<Nivel> niveles;
     int nivel_actual;*/
     Tablero *t;
