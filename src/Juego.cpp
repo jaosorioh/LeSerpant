@@ -63,8 +63,9 @@ void Juego::jugar()
                 {
                     if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
                     ch = aux_ch;
-                    gameFinished = update(ch);
                     }
+                    gameFinished = update(ch);
+                    
                 }
                 else
                 {
