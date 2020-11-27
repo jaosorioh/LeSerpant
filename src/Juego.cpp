@@ -30,14 +30,27 @@ void Juego::jugar()
     while (true) {
         wbkgd(stdscr, COLOR_PAIR(1));
         refresh();
+        int ch = getch();
+        ch = 0;
         mainMenu();
+    while (true) {
+        ch = getch();
+        if (ch == 10) {
+            break;
+        }
+        else if (ch == 27) {
+            erase();
+            endwin();
+            exit(0);
+        }
+    }
         clear();
         erase();
         refresh();
         t = new Tablero();
         int np = 1;
         t->randomXY(np);
-        int ch = KEY_UP;
+        ch = KEY_UP;
         string user = "Jugador: brayanpapi";
         mvprintw(1, 3, user.c_str());
         string score = "Puntaje: 200";
@@ -115,22 +128,7 @@ void Juego::mainMenu()
             i++;
     }
     refresh();
-    int ch = getch();
-    if(ch!=ERR)
-    {
-        ch = 0;
-    }
-    while (true) {
-        ch = getch();
-        if (ch == 10) {
-            break;
-        }
-        else if (ch == 27) {
-            erase();
-            endwin();
-            exit(0);
-        }
-    }
+
 }
 
 bool Juego::update(int& ch)
