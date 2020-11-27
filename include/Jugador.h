@@ -2,7 +2,8 @@
 #ifndef JUGADOR_H
 #define JUGADOR_H
 
-#include <string>
+#include <string> 
+#include <vector>
 
 using namespace std;
 
@@ -11,19 +12,30 @@ public:
     Jugador(string);
     //~Jugador();
 
-    bool isPlayerinFile(); //comprueba si existe el jugador
-    void addMaxScore();
+    void setNewFile( void );
 
-    void setPuntaje(int);
-    int getPuntaje(void);
+    void setMaxScore( int );
+    int getMaxScore( void ) const;
 
-    void setNombre(string);
-    string getNombre(void);
+    void setCurrScore( int );
+    int getCurrScore( void ) const;
+
+    void setName( string );
+    string getName( void ) const;
 
 private:
-    int puntaje;
-    string nombre;
-    string scoreFile;
+
+    void getFileInfo( void );
+
+    int currScore;
+    int maxScore;
+    int nameIndex;
+    string playerName;
+    const string scoreFile = "HighScore.txt";
+
+    //vectores para almacenar la información de puntaje máximo
+    vector<string> allPlayers;
+    vector<int> allScores;
 };
 
 #endif
