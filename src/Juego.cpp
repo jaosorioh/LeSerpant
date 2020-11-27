@@ -32,6 +32,8 @@ void Juego::jugar()
         refresh();
         mainMenu();
         clear();
+        erase();
+        refresh();
         t = new Tablero();
         int np = 1;
         t->randomXY(np);
@@ -42,9 +44,8 @@ void Juego::jugar()
         mvprintw(1, (M + 4) - score.length(), score.c_str());
         while (true) {
             t->printGrid();
-
+            
             int aux_ch = getch();
-            clrtoeol();
             if (aux_ch == ERR) {
                 gameFinished = update(ch);
             }
@@ -63,8 +64,9 @@ void Juego::jugar()
                 {
                     if ((ch == KEY_DOWN && aux_ch != KEY_UP) || (ch == KEY_UP && aux_ch != KEY_DOWN) || (ch == KEY_LEFT && aux_ch != KEY_RIGHT) || (ch == KEY_RIGHT && aux_ch != KEY_LEFT)) {
                     ch = aux_ch;
-                    gameFinished = update(ch);
                     }
+                    gameFinished = update(ch);
+                    
                 }
                 else
                 {
@@ -113,8 +115,13 @@ void Juego::mainMenu()
             i++;
     }
     refresh();
+    int ch = getch();
+    if(ch!=ERR)
+    {
+        ch = 0;
+    }
     while (true) {
-        int ch = getch();
+        ch = getch();
         if (ch == 10) {
             break;
         }
