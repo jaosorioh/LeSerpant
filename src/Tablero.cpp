@@ -161,7 +161,7 @@ void Tablero::printMessage(string& message)
     wattron(win, COLOR_PAIR(1));
 
     //el mensaje lo imprimiremos en el centro
-    int x = static_cast<int>(((M + 2) - message.length()) / 2);
+    int x = static_cast<int>(((M + 4) - message.length()) / 2);
 
     for (char& c : message) {
         mvwaddch(win, (N + 1) / 2, x, chtype(c));
@@ -187,10 +187,22 @@ string Tablero::readLine(int y, int x)
         //validamos que se haya presionado una tecla
         if (ch != ERR) {
             //validamos que se presione ENTER
-            if (ch == '\n' || input.length() > MAX_CHAR) {
+            if (ch == '\n') {
                 break;
             } //solo leemos caracteres alphanumericos
-            else if (isalnum(ch)) {
+            else if(ch == KEY_BACKSPACE)
+            {
+                if(input.size()>0)
+                {
+                    x--;
+                    mvwaddch(win, y, x, ' ');
+                    input.pop_back();
+                    wrefresh(win);
+                }
+                
+            }
+            else if (isalnum(ch) && input.length() <= MAX_CHAR) 
+            {
                 //mostramos el caracter
                 mvwaddch(win, y, x, ch);
                 wrefresh(win);

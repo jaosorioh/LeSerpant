@@ -184,7 +184,7 @@ void Juego::jugar()
         t = new Tablero();
 
         if (uname == "") {
-            string message = "Ingrese su nick:";
+            string message = "Ingrese su nick y presione ENTER:";
             //se lee el nombre
             uname = t->readLine(message);
             //se crea el jugador
