@@ -36,9 +36,9 @@ Juego::Juego()
     refresh();
 
     //definicion de niveles
-    Nivel nivel1(50, 1, true);
-    Nivel nivel2(150, 2, false);
-    Nivel nivel3(300, 3, false);
+    Nivel nivel1(100, 1, true);
+    Nivel nivel2(300, 2, false);
+    Nivel nivel3(600, 3, false);
     niveles = { nivel1, nivel2, nivel3 };
     nivel_actual = 0;
 }

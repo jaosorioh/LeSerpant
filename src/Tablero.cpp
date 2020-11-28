@@ -187,7 +187,7 @@ string Tablero::readLine(int y, int x)
         //validamos que se haya presionado una tecla
         if (ch != ERR) {
             //validamos que se presione ENTER
-            if (ch == '\n') {
+            if (ch == '\n' && input.size() > 0) {
                 break;
             } //solo leemos caracteres alphanumericos
             else if(ch == KEY_BACKSPACE)
