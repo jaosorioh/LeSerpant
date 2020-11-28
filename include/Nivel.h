@@ -16,10 +16,11 @@ public:
     void setScore( int);
     int getNPresas( void ) const;
     void setNPresas( int );
+    
 private:
-	int score;
-	int npresas;
-	bool pasaParedes;
+    int score;
+    int npresas;
+    bool pasaParedes;
 };
 
 #endif

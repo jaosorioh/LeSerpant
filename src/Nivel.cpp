@@ -14,7 +14,7 @@ Nivel::Nivel(int s, int np, bool pp)
 
 bool Nivel::getpasaParedes( void ) const
 {
-	return pasaParedes;
+    return pasaParedes;
 }
 
 void Nivel::setpasaParedes(bool pp)
@@ -24,17 +24,17 @@ void Nivel::setpasaParedes(bool pp)
 
 int Nivel::getScore( void ) const
 {
-	return score;
+    return score;
 } 
 
 void Nivel::setScore( int s )
 {
-	score = s;
+    score = s;
 }
 
 int Nivel::getNPresas( void ) const
 {
-	return npresas;
+    return npresas;
 }
 
 void Nivel::setNPresas( int np )
@@ -43,6 +43,6 @@ void Nivel::setNPresas( int np )
     {
         np = 1;
     }
-	npresas = np;
+    npresas = np;
 }
 

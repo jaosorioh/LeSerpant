@@ -1,4 +1,3 @@
-
 #ifndef JUEGO_H
 #define JUEGO_H
 
@@ -6,7 +5,6 @@
 #include "Nivel.h"
 #include "Jugador.h"
 
-#define COLOR_GRAY 30
 using namespace std;
 
 class Juego 
@@ -14,15 +12,19 @@ class Juego
 
 public:
     Juego();
+    //~Juego();
     void jugar();
-    
+
 private:
-    bool update(int &);
     void mainMenu();
+    bool update(int &);
+    
     Jugador *player;
+    Tablero *t;
     vector<Nivel> niveles;
     int nivel_actual;
-    Tablero *t;
+    
+    //pixel art con los colores determinados para la serpiente del inicio
     const vector<vector<int> > snake_pxart = {
         { 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0 },
@@ -41,6 +43,7 @@ private:
         { 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0 }
 
     };
+    
     const vector<string> toprint = {"Le Serpent","Creado por","Nicole Rivera","Brayan Barrera"," John Osorio","Presione ENTER para jugar","ESC para salir"};
 };
 

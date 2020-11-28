@@ -6,33 +6,41 @@
 #include <string>
 #include <time.h>
 
+//color personalizado para ncurses
+#define COLOR_GRAY 30
+//maximo numero de caracteres que pueden leerse para el nombre del jugador
+#define MAX_CHAR 10
+//tiempo de espera para actualizar algunos cambios
+#define WAIT_TIME 0.6e4
+
 using namespace std;
 class Tablero {
 
 public:
     Tablero();
     ~Tablero();
-    Serpiente * getSnake() const;
 
-    void setSnake(Serpiente *);
+    void setSnake(Serpiente*);
+    Serpiente* getSnake() const;
 
-    vector<Punto> *getPresas() const;
+    void setPresas(vector<Punto>*);
+    vector<Punto>* getPresas() const;
 
-    void setPresas(vector<Punto> *);
-    int getPuntoIndex(const int, const int, vector<Punto> *);
-    void randomXY(int &);
-    
+    int getPuntoIndex(const int, const int, vector<Punto>*);
+    void randomXY(int&);
+
     void printGrid(bool);
+    void printMessage(string&);
+    string readLine(string&);
     void printGameOver(bool);
-    string readLine(string &);
-    string readLine(int, int);
-    void printMessage(string &);
 
 private:
+    Serpiente* snake;
+    vector<Punto>* presas;
+    WINDOW* win;
+
     void printBorder(int);
-    vector<Punto> *presas;
-    Serpiente *snake;
-    WINDOW *win;
+    string readLine(int, int);
 };
 
 #endif
