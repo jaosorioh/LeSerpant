@@ -27,7 +27,7 @@ public:
     void setD(int);
     int getD() const;
     void modVel();
-    Punto moverCabeza(int);
+    Punto moverCabeza(int, bool&);
     void setCuerpo(vector<Punto> *);
     vector<Punto> *getCuerpo();
 

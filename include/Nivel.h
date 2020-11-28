@@ -9,21 +9,17 @@ using namespace std;
 class Nivel
 {
 public:
-	Nivel( int, int );
-
-	int nPresas( void );
-
-	vector<Punto> presas();
-
-	bool getpasaParedes( void ) const;
-	int getN( void ) const;
-	int getM( void ) const;
-
+    Nivel(int, int , bool);
+    bool getpasaParedes( void ) const;
+    void setpasaParedes(bool);
+    int getScore( void ) const;
+    void setScore( int);
+    int getNPresas( void ) const;
+    void setNPresas( int );
 private:
-	int m;
-	int n;
+	int score;
+	int npresas;
 	bool pasaParedes;
-
 };
 
 #endif

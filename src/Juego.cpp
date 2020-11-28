@@ -5,7 +5,6 @@ using namespace std;
 
 Juego::Juego()
 {
-    
     srand(time(NULL));
 
     initscr();
@@ -17,13 +16,23 @@ Juego::Juego()
 
     start_color();
 
+    init_color(COLOR_RED, 650, 2, 2);
+    init_color(30, 500, 500, 500);
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
     init_pair(2, COLOR_BLACK, COLOR_BLACK);
     init_pair(3, COLOR_BLACK, COLOR_GREEN);
     init_pair(4, COLOR_BLACK, COLOR_RED);
     init_pair(5, COLOR_WHITE, COLOR_BLACK);
+    
+    init_pair(6, COLOR_WHITE, 30);
+    
     wbkgd(stdscr, COLOR_PAIR(1));
     
+    Nivel nivel1(50, 1, true);
+    Nivel nivel2(100, 2, false);
+    Nivel nivel3(200, 3, false);
+    niveles = {nivel1, nivel2, nivel3};
+    nivel_actual = 0;
 }
 
 void Juego::jugar()
@@ -45,10 +54,11 @@ void Juego::jugar()
             usleep(1e6);
         }
         
-        int np = 1;   
-    
+        int np = niveles[nivel_actual].getNPresas(); 
         t->randomXY(np);
+        
         int ch = KEY_UP;
+        
         string user = "Jugador: " + player->getName();
         mvprintw(1, 3, user.c_str());
         while (true) 
@@ -56,8 +66,10 @@ void Juego::jugar()
             //imprime el puntaje y se actualiza
             string score = "Puntaje: " + to_string(player->getCurrScore());
             mvprintw(1, (M + 4) - score.length(), score.c_str());
+            string nivel = "Nivel: " + to_string(nivel_actual+1);
+            mvprintw(2, (M + 4) - nivel.length(), nivel.c_str());
             
-            t->printGrid();
+            t->printGrid(niveles[nivel_actual].getpasaParedes());
             
             int aux_ch = getch();
             if (aux_ch == ERR) {
@@ -93,12 +105,13 @@ void Juego::jugar()
             {
                 usleep(0.6e4);
                 clear();
-                t->printGameOver();
+                t->printGameOver(niveles[nivel_actual].getpasaParedes());
                 usleep(1e6);
 
                 player->checkMaxScore();
                 player->setNewFile();
                 player->setCurrScore(0);
+                nivel_actual = 0;
 
                 break;
             }
@@ -160,26 +173,44 @@ bool Juego::update(int& ch)
     Serpiente* snake = t->getSnake();
     vector<Punto>* presas = t->getPresas();
     
-    Punto newCabeza = snake->moverCabeza(ch);
+    bool touchesWall = false;
+    Punto newCabeza = snake->moverCabeza(ch, touchesWall);
+    if(touchesWall && niveles[nivel_actual].getpasaParedes()==false)
+    {
+        gameFinished = true;
+    }else{
     
-    int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), presas);
-    if (index > -1) {
-        presas->erase(presas->begin() + index);
-        beep();
-        player->addCurrScore(10); //suma puntos por comer
-        snake->comer(newCabeza);
-        int np = 1;
-        t->randomXY(np);
-        
-    }
-    else {
-        int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
-        if (index == -1 || (index == snake->getCuerpo()->size()-1 && snake->getCuerpo()->size() <= N)) {
-            snake->moverse(ch);
+        int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), presas);
+        if (index > -1) {
+            presas->erase(presas->begin() + index);
+            beep();
+            player->addCurrScore(10); //suma puntos por comer
+
+            snake->comer(newCabeza);
+            int np = 1;
+            //pasar de nivel
+            if(player->getCurrScore()>=niveles[nivel_actual].getScore())
+            {
+                if(nivel_actual<niveles.size()-1)
+                {
+                    nivel_actual++;
+                    t = new Tablero();
+                    np = niveles[nivel_actual].getNPresas();
+                }
+            }
+            t->randomXY(np);
+
+
         }
         else {
-            gameFinished = true;
-        }
-    }        
+            int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
+            if (index == -1 || (index == snake->getCuerpo()->size()-1 && snake->getCuerpo()->size() <= N)) {
+                snake->moverse(ch);
+            }
+            else {
+                gameFinished = true;
+            }
+        }   
+    }
     return gameFinished;
 }

@@ -22,14 +22,14 @@ public:
     int getPuntoIndex(const int, const int, vector<Punto> *);
     void randomXY(int &);
     
-    void printGrid();
-    void printGameOver();
+    void printGrid(bool);
+    void printGameOver(bool);
     string readLine(string &);
     string readLine(int, int);
     void printMessage(string &);
 
 private:
-    void printBorder();
+    void printBorder(int);
     vector<Punto> *presas;
     Serpiente *snake;
     WINDOW *win;

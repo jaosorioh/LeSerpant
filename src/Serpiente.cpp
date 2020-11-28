@@ -61,7 +61,7 @@ vector<Punto> *Serpiente::getCuerpo()
     return cuerpo;
 }
 
-Punto Serpiente::moverCabeza(int D_)
+Punto Serpiente::moverCabeza(int D_, bool &touchesWall)
 {
     int x = cuerpo->at(0).getX();
     int y = cuerpo->at(0).getY();
@@ -70,6 +70,7 @@ Punto Serpiente::moverCabeza(int D_)
         x -= 2;
         if(x<2)
         {
+            touchesWall = true;
             x = M;
         }
     }
@@ -78,6 +79,7 @@ Punto Serpiente::moverCabeza(int D_)
         x+=2;
         if(x > M)
         {
+            touchesWall = true;
             x = 2;
         }
     }
@@ -86,6 +88,7 @@ Punto Serpiente::moverCabeza(int D_)
         y++;
         if(y>N)
         {
+            touchesWall = true;
             y = 1;
         }
     }
@@ -94,6 +97,7 @@ Punto Serpiente::moverCabeza(int D_)
         y--;
         if(y<1)
         {
+            touchesWall = true;
             y = N;
         }
     }
@@ -104,7 +108,8 @@ Punto Serpiente::moverCabeza(int D_)
 
 Punto Serpiente::moverCabeza()
 {
-    return moverCabeza(D);
+    bool touchesWall = false;
+    return moverCabeza(D, touchesWall);
 }
 
 void Serpiente::comer(Punto &p)
@@ -116,6 +121,7 @@ void Serpiente::comer(Punto &p)
 void Serpiente::moverse(int& ch)
 {
     D = ch;
+    bool touchesWall;
     Punto cabeza = moverCabeza();
     cuerpo->insert(cuerpo->begin(), cabeza);
     cuerpo->pop_back();

@@ -7,7 +7,7 @@ Tablero::Tablero()
 {
     snake = new Serpiente();
     presas = new vector<Punto>;
-    win = newwin(N + 2, M + 4, 3, 3);
+    win = newwin(N + 2, M + 4, 4, 3);
     wbkgd(win, COLOR_PAIR(1));    
     wrefresh(win);
 }
@@ -77,15 +77,15 @@ void Tablero::randomXY(int& npuntos)
     }
 }
 
-void Tablero::printGameOver()
+void Tablero::printGameOver(bool pasaParedes)
 {
     while(snake->getCuerpo()->size()>0)
     {
         snake->getCuerpo()->pop_back();
         usleep(0.5e4);
-        printGrid();
+        printGrid(pasaParedes);
     }
-    printBorder();
+    printBorder(2);
     string gover = "G A M E  O V E R";
     printMessage(gover);
     wrefresh(win);
@@ -95,7 +95,7 @@ void Tablero::printGameOver()
 
 void Tablero::printMessage(string & message)
 {
-    printBorder();
+    printBorder(2);
     wrefresh(win);
     wattron(win, COLOR_PAIR(1));
     
@@ -167,9 +167,11 @@ string Tablero::readLine(int y, int x)
     
 }
 
-void Tablero::printBorder()
+void Tablero::printBorder(int color)
 {
-    wattron(win, COLOR_PAIR(2));
+    
+    wattron(win, COLOR_PAIR(color));
+    
     for (int i = 0; i < M + 4; i++) {
         mvwaddch(win, 0, i, ' ');
         mvwaddch(win, N + 1, i, ' ');
@@ -180,13 +182,19 @@ void Tablero::printBorder()
         mvwaddch(win, i, 1, ' ');
         mvwaddch(win, i, M + 2, ' ');
         mvwaddch(win, i, M + 3, ' ');
-    }
-    
+    }   
 }
 
-void Tablero::printGrid()
+void Tablero::printGrid(bool pasaParedes)
 {
-    printBorder();
+    int color = 2;
+    if(pasaParedes==true)
+    {
+        color = 6;
+    }
+    
+    printBorder(color);
+    
     wattron(win, COLOR_PAIR(3));
 
     vector<Punto>* cuerpo_ = snake->getCuerpo();

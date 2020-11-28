@@ -1,19 +1,15 @@
 /*
 Implementación de la clase Nivel
 */
-
-#include <vector>
-
 #include "../include/Nivel.h"
 
 using namespace std;
 
-Nivel::Nivel( int uN, int uM) 
+Nivel::Nivel(int s, int np, bool pp) 
 {
-	//fijar tamaño de tablero
-	n = uN;
-	m = uM;
-
+    setScore(s);
+    setNPresas(np);
+    setpasaParedes(pp);
 }
 
 bool Nivel::getpasaParedes( void ) const
@@ -21,12 +17,32 @@ bool Nivel::getpasaParedes( void ) const
 	return pasaParedes;
 }
 
-int Nivel::getN( void ) const
+void Nivel::setpasaParedes(bool pp)
 {
-	return n;
+    pasaParedes = pp;
+}
+
+int Nivel::getScore( void ) const
+{
+	return score;
 } 
 
-int Nivel::getM( void ) const
+void Nivel::setScore( int s )
 {
-	return m;
+	score = s;
 }
+
+int Nivel::getNPresas( void ) const
+{
+	return npresas;
+}
+
+void Nivel::setNPresas( int np )
+{
+    if(np < 1)
+    {
+        np = 1;
+    }
+	npresas = np;
+}
+

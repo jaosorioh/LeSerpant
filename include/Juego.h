@@ -3,8 +3,10 @@
 #define JUEGO_H
 
 #include "Tablero.h"
+#include "Nivel.h"
 #include "Jugador.h"
 
+#define COLOR_GRAY 30
 using namespace std;
 
 class Juego 
@@ -18,8 +20,8 @@ private:
     bool update(int &);
     void mainMenu();
     Jugador *player;
-    /*vector<Nivel> niveles;
-    int nivel_actual;*/
+    vector<Nivel> niveles;
+    int nivel_actual;
     Tablero *t;
     const vector<vector<int> > snake_pxart = {
         { 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
