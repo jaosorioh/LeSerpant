@@ -12,6 +12,8 @@ public:
     Jugador(string &);
     //~Jugador();
 
+    void getFileInfo( void );
+
     void setNewFile( void );
     void addCurrScore( int );
 
@@ -26,9 +28,10 @@ public:
     void setName( string );
     string getName( void ) const;
 
-private:
+    vector<string> getAllPlayers( void ) const;
+    vector<int> getAllScores( void ) const;
 
-    void getFileInfo( void );
+private:
 
     int currScore;
     int maxScore;

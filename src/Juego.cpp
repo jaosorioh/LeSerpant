@@ -280,7 +280,13 @@ void Juego::jugar()
                 ch = ERR;
                 //reestablece la tecla
                 if(answer == 'n')
+                {
+                    player->getFileInfo();
+                    vector<string> jugadores = player->getAllPlayers();
+                    vector<int> puntajes = player->getAllScores();
+                    t->printScores(jugadores,);
                     break;
+                }          
                 else
                 {
                     t = new Tablero();

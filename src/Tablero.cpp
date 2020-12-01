@@ -1,5 +1,7 @@
 #include "../include/Tablero.h"
 #include <unistd.h>
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -304,3 +306,36 @@ int Tablero::printGameOver(bool pasaParedes)
     
     return ch;
 }
+
+//metodo que imprime los puntajes máximos
+void Tablero::printScores( vector<string> names, vector<int> scores )
+{
+    string message1 = "PUNTAJE MAXIMO";
+    printMessage( message1, 2 );
+
+    ostringstream oss;
+    oss << setw(6) << "POS" << setw(12) << "JUGADOR" << setw(8) << "SCORE";
+    string message(oss.str());
+
+    printMessage( message, 4 );
+
+    for(int i=0; i<names.size(); i++)
+    {
+        if (i < 10)
+        {
+            oss.str("");
+            oss.clear();
+            oss << setw(6) << to_string(i+1) << setw(12) << names.at(i) << setw(8) << to_string(scores.at(i));
+            message = string(oss.str());
+            printMessage( message, i + 5 );
+        }
+
+        else
+            break;
+    }
+
+    wrefresh(win);
+    usleep(5e6);
+    wclear(win);
+}
+
