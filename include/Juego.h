@@ -16,13 +16,16 @@ public:
     void jugar();
 
 private:
-    void mainMenu();
-    bool update(int &);
-    
+    //variable para saber si el juego se termino
+    bool gameFinished;
+    int ch; //pressed key
     Jugador *player;
     Tablero *t;
     vector<Nivel> niveles;
     int nivel_actual;
+    
+    void mainMenu();
+    void update(); 
     
     //pixel art con los colores determinados para la serpiente del inicio
     const vector<vector<int> > snake_pxart = {

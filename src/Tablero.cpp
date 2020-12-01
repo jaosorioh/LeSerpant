@@ -11,7 +11,7 @@ Tablero::Tablero()
 
     snake = new Serpiente();
     presas = new vector<Punto>;
-
+    bricks = new vector<Punto>;
     //dibujo del tablero NXM en el centro, el +2 y +4 simboliza los bordes que debieron dibujarse.
 
     int termH;
@@ -30,6 +30,7 @@ Tablero::~Tablero()
     delete snake;
     delete presas;
     delete win;
+    delete bricks;
 }
 
 void Tablero::setSnake(Serpiente* s)
@@ -50,6 +51,16 @@ void Tablero::setPresas(vector<Punto>* presas_)
 vector<Punto>* Tablero::getPresas() const
 {
     return presas;
+}
+
+void Tablero::setBricks(vector<Punto>* bricks_)
+{
+    bricks = bricks_;
+}
+
+vector<Punto>* Tablero::getBricks() const
+{
+    return bricks;
 }
 
 //metodo que busca si el punto, representado por una fila y columna, existe en el vector dado
@@ -79,7 +90,7 @@ int Tablero::getPuntoIndex(const int f, const int c, vector<Punto>* puntos)
 
 //metodo que genera n presas aleatorias
 
-void Tablero::randomXY(int& npuntos)
+void Tablero::randomXY(int& npuntos, vector<Punto> *puntos)
 {
     int i = 0;
     while (i < npuntos) {
@@ -89,10 +100,10 @@ void Tablero::randomXY(int& npuntos)
         int x = 2 * (rand() % m + 1);
 
         //valida que ya no esten agregadas
-        if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1) {
+        if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1 && getPuntoIndex(x, y, bricks) == -1) {
             //se crea la presa
             Punto p(x, y);
-            presas->push_back(p);
+            puntos->push_back(p);
             i++;
         }
     }
@@ -142,7 +153,15 @@ void Tablero::printGrid(bool pasaParedes)
         Punto* pa = &presas->at(i);
         mvwprintw(win, pa->getY(), pa->getX(), "  ");
     }
+    
+    wattron(win, COLOR_PAIR(2));
+    
+    for (int i = 0; i < bricks->size(); i++) {
+        Punto* pa = &bricks->at(i);
+        mvwprintw(win, pa->getY(), pa->getX(), "  ");
+    }
     //actualiza los cambios
+    
     wrefresh(win);
     //modifica el tiempo de espera en que se mueve la culebra segun la velocidad
     double dt = 1e6 * 1 / snake->getV();
@@ -204,6 +223,7 @@ string Tablero::readLine(int y, int x)
             else if (isalnum(ch) && input.length() <= MAX_CHAR) 
             {
                 //mostramos el caracter
+                ch = toupper(ch);
                 mvwaddch(win, y, x, ch);
                 wrefresh(win);
                 //almacenamos el caracter

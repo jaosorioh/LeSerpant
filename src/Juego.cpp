@@ -34,13 +34,17 @@ Juego::Juego()
     //se pinta toda la terminal blanca
     wbkgd(stdscr, COLOR_PAIR(1));
     refresh();
-
+    //100-300-600
     //definicion de niveles
-    Nivel nivel1(100, 1, true);
-    Nivel nivel2(300, 2, false);
-    Nivel nivel3(600, 3, false);
-    niveles = { nivel1, nivel2, nivel3 };
-    nivel_actual = 0;
+    Nivel nivel1(200, 1, true, 0);
+    Nivel nivel2(400, 2, false, 0);
+    Nivel nivel3(800, 3, false, 8);
+    Nivel nivel4(1000, 1, false, 20);
+    niveles = { nivel1, nivel2, nivel3, nivel4};
+    
+    nivel_actual = 3;
+    gameFinished = false;
+    ch = ERR;
 }
 
 //imprime menu principal
@@ -88,7 +92,7 @@ void Juego::mainMenu()
 
     refresh();
 
-    int ch = getch();
+    ch = getch();
 
     while (true) {
         ch = getch();
@@ -103,13 +107,14 @@ void Juego::mainMenu()
             exit(0);
         }
     }
+    ch = ERR;
 }
 
 //actualiza el estado de la serpiente y del juego
-bool Juego::update(int& ch)
+void Juego::update()
 {
     //para saber si el juego se termino por un mal movimiento
-    bool gameFinished = false;
+    gameFinished = false;
     
     Serpiente* snake = t->getSnake();
     vector<Punto>* presas = t->getPresas();
@@ -141,41 +146,52 @@ bool Juego::update(int& ch)
                     nivel_actual++;
                     //se crea un nuevo tablero
                     t = new Tablero();
-                    t->getSnake()->setD(KEY_UP);
                     np = niveles[nivel_actual].getNPresas();
+                    int nb = niveles[nivel_actual].getNBricks();
+                    t->randomXY(nb, t->getBricks());
                     gameFinished = false;
+                    ch = ERR;
             }
             //se generan las presas
-            t->randomXY(np);
+            t->randomXY(np, t->getPresas());
+            
         }
         else {
-            //se valida si la culebra toca alguna parte del cuerpo
-            int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
-            if (index == -1 || (index == snake->getCuerpo()->size() - 1 && snake->getCuerpo()->size() <= N)) {
-                snake->moverse(ch);
-            }
-            //de ser asi, se muere
-            else {
+            //se valida que no haya tocado un ladrillo
+            index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), t->getBricks());
+            if(index > - 1)
+            {
                 gameFinished = true;
+            }
+            else{
+                //se valida si la culebra toca alguna parte del cuerpo
+                index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), snake->getCuerpo());
+                if (index == -1 || (index == snake->getCuerpo()->size() - 1 && snake->getCuerpo()->size() <= N)) {
+                    snake->moverse(ch);
+                    gameFinished = false;
+                }
+                //de ser asi, se muere
+                else {
+                    gameFinished = true;
+                }
             }
         }
     }
-    return gameFinished;
 }
 
 void Juego::jugar()
 {
-    //variable para saber si el juego se termino
-    bool gameFinished = false;
-    //nombre de usuario
+    
+    //para validar si ya se ingreso un nombre de usuario
     string uname = "";
 
     while (true) {
-        //imprime menu principal
+        //dimensiones de la terminal
         int termH;
         int termW;
         getmaxyx(stdscr, termH, termW);
 
+        //imprime menu principal
         mainMenu();
         clear();
         refresh();
@@ -194,12 +210,14 @@ void Juego::jugar()
 
         //numero de presas a imprimir para el nivel actual
         int np = niveles[nivel_actual].getNPresas();
-        t->randomXY(np);
-
-        int ch = KEY_UP;
+        t->randomXY(np, t->getPresas());
+        
+        //se genera el numero de ladrillos segun el nivel actual
+        int nb = niveles[nivel_actual].getNBricks();
+        t->randomXY(nb, t->getBricks());
 
         //imprimir estadisticas
-        string user = "Jugador: " + uname;
+        string user = "Jugador: " + player->getName();
         mvprintw(2, (termW - (M + 4)) / 2, user.c_str());
 
         while (true) {
@@ -215,9 +233,14 @@ void Juego::jugar()
             t->printGrid(pparedes);
 
             int aux_ch = getch();
+            if(ch == ERR)
+            {
+                if(aux_ch==KEY_UP || aux_ch == KEY_RIGHT || aux_ch == KEY_LEFT)//cuando ch == ERR, es porque la serpiente esta quieta, solo se puede mover inicialmente hacia arriba, la izquierda o derecha
+                    ch = aux_ch;
+            }
 
             //valida que se presione ESC o las fechas de direccion, las demas teclas son ignoradas
-            if (aux_ch != ERR && (aux_ch == 27 || (aux_ch == KEY_UP || aux_ch == KEY_DOWN || aux_ch == KEY_LEFT || aux_ch == KEY_RIGHT))) {
+            else if (aux_ch != ERR && (aux_ch == 27 || (aux_ch == KEY_UP || aux_ch == KEY_DOWN || aux_ch == KEY_LEFT || aux_ch == KEY_RIGHT))) {
                 //si es la tecla de ESC, se sale
                 if (aux_ch == 27) {
                     erase();
@@ -230,9 +253,14 @@ void Juego::jugar()
                     ch = aux_ch;
                 }
             }
+            else
+            {
+                gameFinished=false;
+            }
             
             //se verifica si se termino el juego al presionar la tecla
-            gameFinished = update(ch);
+            if(ch!=ERR)
+                update();
             //lo que hace una vez pierde
             if (gameFinished) {
                 usleep(WAIT_TIME);
@@ -251,8 +279,8 @@ void Juego::jugar()
                 player->setCurrScore(0);
                 //reestablece el nivel
                 nivel_actual = 0;
+                ch = ERR;
                 //reestablece la tecla
-                ch = KEY_UP;
                 break;
             }
         }

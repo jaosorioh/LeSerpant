@@ -25,9 +25,12 @@ public:
 
     void setPresas(vector<Punto>*);
     vector<Punto>* getPresas() const;
+    
+    void setBricks(vector<Punto>*);
+    vector<Punto>* getBricks() const;
 
     int getPuntoIndex(const int, const int, vector<Punto>*);
-    void randomXY(int&);
+    void randomXY(int&, vector<Punto> *);
 
     void printGrid(bool);
     void printMessage(string&);
@@ -37,6 +40,7 @@ public:
 private:
     Serpiente* snake;
     vector<Punto>* presas;
+    vector<Punto>* bricks;
     WINDOW* win;
 
     void printBorder(int);
