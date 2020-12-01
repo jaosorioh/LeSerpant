@@ -11,7 +11,6 @@ Nivel::Nivel(int s, int np, bool pp, int nb)
     setNPresas(np);
     setNBricks(nb);
     setpasaParedes(pp);
-    
 }
 
 bool Nivel::getpasaParedes( void ) const
@@ -62,4 +61,3 @@ void Nivel::setNBricks( int nb )
     
     nbricks = nb;
 }
-

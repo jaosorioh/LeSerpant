@@ -34,8 +34,9 @@ public:
 
     void printGrid(bool);
     void printMessage(string&);
+    void printMessage(string&, int);
     string readLine(string&);
-    void printGameOver(bool);
+    int printGameOver(bool);
 
 private:
     Serpiente* snake;
@@ -45,6 +46,19 @@ private:
 
     void printBorder(int);
     string readLine(int, int);
+    const vector<vector<int> > gover_pxart = {
+        { 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0},
+        { 0, 1, 3, 3, 3, 1, 0, 1, 3, 3, 3, 1, 0},
+        { 1, 3, 3, 3, 3, 3, 1, 3, 3, 3, 3, 3, 1},
+        { 1, 3, 3, 3, 3, 3, 1, 1, 3, 3, 3, 3, 1},
+        { 1, 3, 3, 3, 3, 3, 3, 1, 1, 3, 3, 3, 1},
+        { 0, 1, 3, 3, 3, 3, 1, 1, 3, 3, 3, 1, 0},
+        { 0, 0, 1, 3, 3, 1, 1, 3, 3, 3, 1, 0, 0},
+        { 0, 0, 0, 1, 3, 3, 1, 1, 3, 1, 0, 0, 0},
+        { 0, 0, 0, 0, 1, 3, 3, 1, 1, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}
+    };
 };
 
 #endif

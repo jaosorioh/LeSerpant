@@ -12,7 +12,7 @@ class Juego
 
 public:
     Juego();
-    //~Juego();
+    ~Juego();
     void jugar();
 
 private:

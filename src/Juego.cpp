@@ -36,17 +36,21 @@ Juego::Juego()
     refresh();
     //100-300-600
     //definicion de niveles
-    Nivel nivel1(200, 1, true, 0);
-    Nivel nivel2(400, 2, false, 0);
-    Nivel nivel3(800, 3, false, 8);
-    Nivel nivel4(1000, 1, false, 20);
+    Nivel nivel1(50, 1);
+    Nivel nivel2(100, 2, false);
+    Nivel nivel3(150, 3, false, 8);
+    Nivel nivel4(200, 1, false, 20);
     niveles = { nivel1, nivel2, nivel3, nivel4};
     
-    nivel_actual = 3;
+    nivel_actual = 0;
     gameFinished = false;
     ch = ERR;
 }
 
+Juego::~Juego(){
+    delete player;
+    delete t;
+}
 //imprime menu principal
 void Juego::mainMenu()
 {
@@ -92,7 +96,7 @@ void Juego::mainMenu()
 
     refresh();
 
-    ch = getch();
+    nodelay(stdscr, FALSE);
 
     while (true) {
         ch = getch();
@@ -107,6 +111,7 @@ void Juego::mainMenu()
             exit(0);
         }
     }
+    nodelay(stdscr, TRUE);
     ch = ERR;
 }
 
@@ -131,10 +136,11 @@ void Juego::update()
         //revisamos si la posicion de la cabeza al moverse coincide con la de una presa
         int index = t->getPuntoIndex(newCabeza.getX(), newCabeza.getY(), presas);
         if (index > -1) {
+            beep();
             //de ser así, eliminamos la presa
             presas->erase(presas->begin() + index);
             //emitimos un sonido
-            beep();
+            
             //aumentamos puntake
             player->addCurrScore(10); //suma puntos por comer
             //modificamos el cuerpo de la culebra
@@ -181,10 +187,6 @@ void Juego::update()
 
 void Juego::jugar()
 {
-    
-    //para validar si ya se ingreso un nombre de usuario
-    string uname = "";
-
     while (true) {
         //dimensiones de la terminal
         int termH;
@@ -198,15 +200,12 @@ void Juego::jugar()
 
         //creamos el tablero
         t = new Tablero();
-
-        if (uname == "") {
-            string message = "Ingrese su nick y presione ENTER:";
-            //se lee el nombre
-            uname = t->readLine(message);
-            //se crea el jugador
-            player = new Jugador(uname);
-            usleep(WAIT_TIME);
-        }
+        string message = "Ingrese su nick y presione ENTER:";
+        //se lee el nombre
+        string uname = t->readLine(message);
+        //se crea el jugador
+        player = new Jugador(uname);
+        usleep(WAIT_TIME);
 
         //numero de presas a imprimir para el nivel actual
         int np = niveles[nivel_actual].getNPresas();
@@ -267,8 +266,7 @@ void Juego::jugar()
                 clear();
 
                 //muestra el fin de juego
-                t->printGameOver(pparedes);
-                usleep(1e6);
+                int answer = t->printGameOver(pparedes);
                 
                 //reestablece la variable
                 gameFinished = false;
@@ -281,7 +279,24 @@ void Juego::jugar()
                 nivel_actual = 0;
                 ch = ERR;
                 //reestablece la tecla
-                break;
+                if(answer == 'n')
+                    break;
+                else
+                {
+                    t = new Tablero();
+                    user = "Jugador: " + player->getName();
+                    mvprintw(2, (termW - (M + 4)) / 2, user.c_str());
+                    np = niveles[nivel_actual].getNPresas();
+                    t->randomXY(np, t->getPresas());
+
+                    //se genera el numero de ladrillos segun el nivel actual
+                    nb = niveles[nivel_actual].getNBricks();
+                    t->randomXY(nb, t->getBricks());
+
+                    //imprimir estadisticas
+                    string user = "Jugador: " + player->getName();
+                    mvprintw(2, (termW - (M + 4)) / 2, user.c_str());
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ using namespace std;
 class Nivel
 {
 public:
-    Nivel(int, int , bool, int);
+    Nivel(int, int , bool = true, int = 0);
     bool getpasaParedes( void ) const;
     void setpasaParedes(bool);
     int getScore( void ) const;

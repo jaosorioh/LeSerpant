@@ -17,7 +17,8 @@ Tablero::Tablero()
     int termH;
     int termW;
     getmaxyx(stdscr, termH, termW);
-    win = newwin(N + 2, M + 4, 5, (termW - (M + 4)) / 2);
+    win = newwin(N + 2*ymin, M + 2*xmin, 5, (termW - (M + 2*xmin)) / 2);
+    
     //se pinta el tablero de blanco
     wbkgd(win, COLOR_PAIR(1));
     //se actualiza la pantalla
@@ -96,8 +97,8 @@ void Tablero::randomXY(int& npuntos, vector<Punto> *puntos)
     while (i < npuntos) {
         int m = static_cast<int>((M + 1) / 2.0);
         //genera coordenadas x, y aleatorias
-        int y = rand() % (N) + 1;
-        int x = 2 * (rand() % m + 1);
+        int y = rand() % (N) + ymin;
+        int x = 2 * (rand() % m) + xmin;
 
         //valida que ya no esten agregadas
         if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1 && getPuntoIndex(x, y, bricks) == -1) {
@@ -171,7 +172,7 @@ void Tablero::printGrid(bool pasaParedes)
     werase(win);
 }
 
-void Tablero::printMessage(string& message)
+void Tablero::printMessage(string& message, int y)
 {
     //para imprimir bordes, usamos negro
     printBorder(2);
@@ -183,12 +184,17 @@ void Tablero::printMessage(string& message)
     int x = static_cast<int>(((M + 4) - message.length()) / 2);
 
     for (char& c : message) {
-        mvwaddch(win, (N + 1) / 2, x, chtype(c));
+        mvwaddch(win, y, x, chtype(c));
         //tiempo de espera entre la impresion de cada caracter
         usleep(4 * WAIT_TIME);
         x++;
         wrefresh(win);
     }
+}
+
+void Tablero::printMessage(string& message)
+{
+    printMessage(message, (N + 1) / 2);
 }
 
 //metodo que lee los caracteres enviados por pantalla y los muestra en la fila y columna especificada
@@ -247,7 +253,7 @@ string Tablero::readLine(string& message)
 }
 
 //metodo que imprime el mensaje de game over y desvanece cuelbra
-void Tablero::printGameOver(bool pasaParedes)
+int Tablero::printGameOver(bool pasaParedes)
 {
     //se va eliminando la culebra, desde la cola hasta la cabeza
     while (snake->getCuerpo()->size() > 0) {
@@ -259,8 +265,42 @@ void Tablero::printGameOver(bool pasaParedes)
     //se imprime un borde negro
 
     printBorder(2);
-    string gover = "G A M E  O V E R";
-    printMessage(gover);
+    int i = 0;
+    //se imprime la serpiente en pixel art
+
+
+    int xgover = (M - 2 * gover_pxart.size()) / 2;
+
+    for (; i < gover_pxart.size(); i++) {
+        for (int j = 0; j < gover_pxart[i].size(); j++) {
+            wattron(win, COLOR_PAIR(gover_pxart[i][j] + 1));
+            mvwprintw(win, i + 2, 2 * j + xgover, "  ");
+            usleep(WAIT_TIME);
+            wrefresh(win);
+        }
+    }
+
+    string message = "G A M E  O V E R";
+    printMessage(message, gover_pxart.size() + 4);
+    
+    message = "Desea jugar de nuevo?";
+    printMessage(message, gover_pxart.size() + 6);
+    message = "Presione 's' para si, 'n' para no";
+    printMessage(message, gover_pxart.size() + 7);
+    nodelay(win, FALSE);
+
+    int ch;
+    while(true)
+    {    
+        ch = wgetch(win);
+        if(ch == 's' || ch == 'n')
+        {
+            break;
+        }   
+    }
+    nodelay(win, TRUE);
     wrefresh(win);
     wclear(win);
+    
+    return ch;
 }
