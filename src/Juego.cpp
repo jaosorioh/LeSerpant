@@ -284,7 +284,7 @@ void Juego::jugar()
                     player->getFileInfo();
                     vector<string> jugadores = player->getAllPlayers();
                     vector<int> puntajes = player->getAllScores();
-                    t->printScores(jugadores,);
+                    t->printScores(jugadores, puntajes);
                     break;
                 }          
                 else
