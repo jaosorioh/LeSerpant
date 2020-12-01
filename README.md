@@ -9,3 +9,14 @@ En este repositorio encontrará todos los archivos correspondientes al desarroll
 - **Main.cpp** ejecuta el juego Le Serpent
 
 Cualquier inquietud o información adicional, puede comunicarse con cualquiera de los contribuidores de este repositorio.
+
+---
+
+**PARA JUGAR**
+
+Si desea jugar solo debe tener todos los archivos de este repositorio en una copia local y, ejecutar el archivo .py dependiendo de su sistema operativo.
+
+- Si tiene Linux use: `python send.py`
+- Si tiene Mac use: `python send_nico.py`
+
+En caso que el comando `resize` no funcione, le pedimos por favor revise si tiene instalada dicha linea de comando para modificar el tamaño de la consola. 
