@@ -5,16 +5,17 @@ Implementación de la clase Nivel
 
 using namespace std;
 
-Nivel::Nivel(int s, int np, bool pp) 
+Nivel::Nivel(int s, int np, bool pp, int nb) 
 {
     setScore(s);
     setNPresas(np);
+    setNBricks(nb);
     setpasaParedes(pp);
 }
 
 bool Nivel::getpasaParedes( void ) const
 {
-	return pasaParedes;
+    return pasaParedes;
 }
 
 void Nivel::setpasaParedes(bool pp)
@@ -24,17 +25,17 @@ void Nivel::setpasaParedes(bool pp)
 
 int Nivel::getScore( void ) const
 {
-	return score;
+    return score;
 } 
 
 void Nivel::setScore( int s )
 {
-	score = s;
+    score = s;
 }
 
 int Nivel::getNPresas( void ) const
 {
-	return npresas;
+    return npresas;
 }
 
 void Nivel::setNPresas( int np )
@@ -43,6 +44,20 @@ void Nivel::setNPresas( int np )
     {
         np = 1;
     }
-	npresas = np;
+    npresas = np;
 }
 
+int Nivel::getNBricks( void ) const
+{
+    return nbricks;
+}
+
+void Nivel::setNBricks( int nb )
+{
+    if(nb < 0)
+    {
+        nb = 0;
+    }
+    
+    nbricks = nb;
+}

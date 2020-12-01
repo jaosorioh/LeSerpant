@@ -68,7 +68,7 @@ Punto Serpiente::moverCabeza(int D_, bool &touchesWall)
 
     if (D_ == KEY_LEFT) {
         x -= 2;
-        if(x<2)
+        if(x<xmin)
         {
             touchesWall = true;
             x = M;
@@ -80,7 +80,7 @@ Punto Serpiente::moverCabeza(int D_, bool &touchesWall)
         if(x > M)
         {
             touchesWall = true;
-            x = 2;
+            x = xmin;
         }
     }
 
@@ -89,13 +89,13 @@ Punto Serpiente::moverCabeza(int D_, bool &touchesWall)
         if(y>N)
         {
             touchesWall = true;
-            y = 1;
+            y = ymin;
         }
     }
 
     if (D_ == KEY_UP) {
         y--;
-        if(y<1)
+        if(y<ymin)
         {
             touchesWall = true;
             y = N;

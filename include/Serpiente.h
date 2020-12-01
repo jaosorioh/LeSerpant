@@ -8,6 +8,8 @@
 
 #define N 22
 #define M 44
+#define xmin 2
+#define ymin 1
 #define aum 1.0
 #define Vmin 5.0
 #define Vmax 30.0
