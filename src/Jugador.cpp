@@ -203,3 +203,21 @@ string Jugador::getName( void ) const
 	return playerName;
 }
 
+/*
+Función para obtener el nombre de todos los jugadores en HighScores.txt
+OUTPUT: vectro<string> (nombre de los jugadores)
+*/
+vector<string> Jugador::getAllPlayers( void ) const
+{
+	return allPlayers;
+}
+
+/*
+Función para obtener el punta de los jugadores en HighScores.txt
+OUTPUT: vector<int> (puntaje de los jugadores)
+*/
+vector<int> Jugador::getAllScores( void ) const
+{
+	return allScores;
+}
+
