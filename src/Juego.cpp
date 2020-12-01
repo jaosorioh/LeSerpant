@@ -281,9 +281,11 @@ void Juego::jugar()
                 //reestablece la tecla
                 if(answer == 'n')
                 {
+                    //actualiza los puntajes máximos
                     player->getFileInfo();
                     vector<string> jugadores = player->getAllPlayers();
                     vector<int> puntajes = player->getAllScores();
+                    //despliega la tabla de puntajes
                     t->printScores(jugadores, puntajes);
                     break;
                 }          
