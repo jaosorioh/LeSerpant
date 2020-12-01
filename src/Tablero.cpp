@@ -36,31 +36,55 @@ Tablero::~Tablero()
     delete bricks;
 }
 
+/*
+Función para establecer la serpiente
+INPUT: Serpiente (elemento de la clase)
+*/
 void Tablero::setSnake(Serpiente* s)
 {
     snake = s;
 }
 
+/*
+Función para obtener la serpiente
+OUTPUT: Serpiente (elemento de la clase)
+*/
 Serpiente* Tablero::getSnake() const
 {
     return snake;
 }
 
+/*
+Función para establecer las presas
+INPUT: vector<Punto> (elementos de clase)
+*/
 void Tablero::setPresas(vector<Punto>* presas_)
 {
     presas = presas_;
 }
 
+/*
+Función para obtener las presas
+OUTPUT: vector<Punto> (elementos de clase)
+*/
 vector<Punto>* Tablero::getPresas() const
 {
     return presas;
 }
 
+/*
+Función para establecer los ladrillos
+INPUT: vector<Punto> (elementos de clase)
+*/
 void Tablero::setBricks(vector<Punto>* bricks_)
 {
     bricks = bricks_;
 }
 
+/*
+Función para obtener los ladrillos
+OUTPUT: vector<Punto> (elementos de clase)
+*/
 vector<Punto>* Tablero::getBricks() const
 {
     return bricks;
