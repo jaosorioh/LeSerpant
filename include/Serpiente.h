@@ -19,6 +19,7 @@ using namespace std;
 class Serpiente {
 public:
     Serpiente(int = 3, double = Vmin);//v = pix/sec
+    ~Serpiente();
     //Para mover todo el cuerpo según la nueva posición de la cabeza:
     void moverse(int&);
     void comer(Punto &);

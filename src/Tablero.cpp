@@ -231,10 +231,9 @@ string Tablero::readLine(int y, int x)
     //utilizamos color negro para letra
     wattron(win, COLOR_PAIR(1));
     //variable para leer char;
-    int ch = getch();
-
+    nodelay(win, FALSE);
     while (true) {
-        ch = getch();
+        int ch = getch();
         //validamos que se haya presionado una tecla
         if (ch != ERR) {
             //validamos que se presione ENTER
@@ -266,6 +265,7 @@ string Tablero::readLine(int y, int x)
         }
     }
     //limpiamos despues de mostrar
+    nodelay(win, TRUE);
     wclear(win);
     return input;
 }
@@ -332,20 +332,20 @@ int Tablero::printGameOver(bool pasaParedes)
 }
 
 //metodo que imprime los puntajes máximos
-void Tablero::printScores( vector<string> names, vector<int> scores )
+void Tablero::printScores( vector<string> *names, vector<int> *scores)
 {
-    string message1 = "PUNTAJE MAXIMO";
-    printMessage( message1, 2 );
+    string message = "PUNTAJE MAXIMO";
+    printMessage( message, 2 );
 
     //establece un string a partir de un flujo para fijar espacios entre palabras
     ostringstream oss;
     oss << setw(6) << "POS" << setw(12) << "JUGADOR" << setw(8) << "SCORE";
-    string message(oss.str());
+    message = string(oss.str());
 
     printMessage( message, 4 );
 
     //recorre todos los puntajes
-    for(int i=0; i<names.size(); i++)
+    for(int i=0; i<names->size(); i++)
     {
         //solo muestra los 10 puntajes más altos
         if (i < 10)
@@ -354,7 +354,7 @@ void Tablero::printScores( vector<string> names, vector<int> scores )
             oss.str("");
             oss.clear();
             //imprime los jugadores y sus puntajes con formato de tabla
-            oss << setw(6) << to_string(i+1) << setw(12) << names.at(i) << setw(8) << to_string(scores.at(i));
+            oss << setw(6) << to_string(i+1) << setw(12) << names->at(i) << setw(8) << to_string(scores->at(i));
             message = string(oss.str());
             printMessage( message, i + 5 );
         }
@@ -364,7 +364,7 @@ void Tablero::printScores( vector<string> names, vector<int> scores )
     }
 
     wrefresh(win);
-    usleep(5e6);
+    usleep(1e6);
     wclear(win);
 }
 

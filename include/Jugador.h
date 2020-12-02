@@ -10,7 +10,7 @@ using namespace std;
 class Jugador {
 public:
     Jugador(string &);
-    //~Jugador();
+    ~Jugador();
 
     void getFileInfo( void );
 
@@ -28,8 +28,8 @@ public:
     void setName( string );
     string getName( void ) const;
 
-    vector<string> getAllPlayers( void ) const;
-    vector<int> getAllScores( void ) const;
+    vector<string> *getAllPlayers( void ) const;
+    vector<int> *getAllScores( void ) const;
 
 private:
 
@@ -40,8 +40,8 @@ private:
     const string scoreFile = "HighScore.txt";
 
     //vectores para almacenar la información de puntaje máximo
-    vector<string> allPlayers;
-    vector<int> allScores;
+    vector<string> *allPlayers;
+    vector<int> *allScores;
 };
 
 #endif

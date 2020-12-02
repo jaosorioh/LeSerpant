@@ -15,11 +15,18 @@ using namespace std;
 Jugador::Jugador(string & name)
 {
 	//set nombre en mayuscula
-	//string uName = "alexito"	
 	setName(name);
 	setCurrScore(0);
+    allPlayers = new vector<string>;
+    allScores = new vector<int>;
 	//obtener la información de puntajes máximos
-	getFileInfo();
+	getFileInfo();    
+}
+
+Jugador::~Jugador()
+{
+    delete allPlayers;
+    delete allScores;
 }
 
 /*
@@ -31,9 +38,10 @@ void Jugador::getFileInfo( void )
 	int maxPoints;
 	string isThere = getName();
 
-	allPlayers.clear();
-	allScores.clear();
-
+    if(allPlayers->size()>0){
+        allPlayers->clear();
+        allScores->clear();
+    }
 	ifstream puntajes_entr(scoreFile.c_str());
 
 	if (puntajes_entr.fail()) //comprueba la apertura con éxito
@@ -58,16 +66,16 @@ void Jugador::getFileInfo( void )
 			name_index = count;
 		}
 
-		allPlayers.push_back(player);
-		allScores.push_back(maxPoints);
+		allPlayers->push_back(player);
+		allScores->push_back(maxPoints);
 	}
 
 	//si el jugador no está en la tabla, establece su puntaje máximo inicial como 0
 	if (name_index == -1)
 	{
-		allPlayers.push_back(isThere);
-		allScores.push_back(0);
-		name_index = allPlayers.size() - 1;
+		allPlayers->push_back(isThere);
+		allScores->push_back(0);
+		name_index = allPlayers->size() - 1;
 
 		setMaxScore(0);
 	}
@@ -87,14 +95,14 @@ Función para actualizar el archivo de puntajes máximos
 void Jugador::setNewFile( void )
 {
 	//actualizamos el puntaje maximo
-	allScores.at(nameIndex) = maxScore;
+	allScores->at(nameIndex) = maxScore;
 
 	//ordenamos los puntajes de mayor a menor score 
 	vector<int> sortScore;
 
-	for (int i=0; i<allScores.size(); i++)
+	for (int i=0; i<allScores->size(); i++)
 	{
-		sortScore.push_back(allScores.at(i));
+		sortScore.push_back(allScores->at(i));
 	}
 
 	sort(sortScore.begin(), sortScore.end(), greater<int>());
@@ -115,11 +123,11 @@ void Jugador::setNewFile( void )
 	//escribimos en orden de mayor a menor
 	for (int i=0; i<sortScore.size(); i++) 
 	{
-		for (int j=0; j<allScores.size(); j++)
+		for (int j=0; j<allScores->size(); j++)
 		{
-			if ( sortScore.at(i) == allScores.at(j) )
+			if ( sortScore.at(i) == allScores->at(j) )
 			{
-				puntajes_out << allPlayers.at(j) << " " << allScores.at(j) << endl;
+				puntajes_out << allPlayers->at(j) << " " << allScores->at(j) << endl;
 			}
 		}
 	}
@@ -207,7 +215,7 @@ string Jugador::getName( void ) const
 Función para obtener el nombre de todos los jugadores en HighScores.txt
 OUTPUT: vectro<string> (nombre de los jugadores)
 */
-vector<string> Jugador::getAllPlayers( void ) const
+vector<string> *Jugador::getAllPlayers( void ) const
 {
 	return allPlayers;
 }
@@ -216,7 +224,7 @@ vector<string> Jugador::getAllPlayers( void ) const
 Función para obtener el punta de los jugadores en HighScores.txt
 OUTPUT: vector<int> (puntaje de los jugadores)
 */
-vector<int> Jugador::getAllScores( void ) const
+vector<int> *Jugador::getAllScores( void ) const
 {
 	return allScores;
 }

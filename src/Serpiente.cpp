@@ -18,6 +18,10 @@ Serpiente::Serpiente(int L, double V_)
     }
 }
 
+Serpiente::~Serpiente()
+{
+    delete cuerpo;
+}
 void Serpiente::setV(double V_)
 {
     if(V_ < Vmin)

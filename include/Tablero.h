@@ -37,7 +37,7 @@ public:
     void printMessage(string&, int);
     string readLine(string&);
     int printGameOver(bool);
-    void printScores( vector<string>, vector<int> );
+    void printScores( vector<string>*, vector<int>*);
 
 private:
     Serpiente* snake;

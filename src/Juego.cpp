@@ -36,10 +36,10 @@ Juego::Juego()
     refresh();
     //100-300-600
     //definicion de niveles
-    Nivel nivel1(50, 1);
-    Nivel nivel2(100, 2, false);
-    Nivel nivel3(150, 3, false, 8);
-    Nivel nivel4(200, 1, false, 20);
+    Nivel nivel1(150, 1);
+    Nivel nivel2(300, 2, false);
+    Nivel nivel3(450, 3, false, 8);
+    Nivel nivel4(600, 1, false, 20);
     niveles = { nivel1, nivel2, nivel3, nivel4};
     
     nivel_actual = 0;
@@ -283,8 +283,8 @@ void Juego::jugar()
                 {
                     //actualiza los puntajes máximos
                     player->getFileInfo();
-                    vector<string> jugadores = player->getAllPlayers();
-                    vector<int> puntajes = player->getAllScores();
+                    vector<string> *jugadores = player->getAllPlayers();
+                    vector<int> *puntajes = player->getAllScores();
                     //despliega la tabla de puntajes
                     t->printScores(jugadores, puntajes);
                     break;
