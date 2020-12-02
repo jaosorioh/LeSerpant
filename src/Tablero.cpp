@@ -115,7 +115,7 @@ int Tablero::getPuntoIndex(const int f, const int c, vector<Punto>* puntos)
     return i;
 }
 
-//metodo que genera n presas aleatorias
+//metodo que genera n puntos aleatorios
 
 void Tablero::randomXY(int& npuntos, vector<Punto> *puntos)
 {
@@ -128,7 +128,7 @@ void Tablero::randomXY(int& npuntos, vector<Punto> *puntos)
 
         //valida que ya no esten agregadas
         if (getPuntoIndex(x, y, presas) == -1 && getPuntoIndex(x, y, snake->getCuerpo()) == -1 && getPuntoIndex(x, y, bricks) == -1) {
-            //se crea la presa
+            //se crea el punto
             Punto p(x, y);
             puntos->push_back(p);
             i++;
